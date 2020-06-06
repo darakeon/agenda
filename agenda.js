@@ -1,62 +1,61 @@
-function printCalendar(year) {
-	var firstWeekday = firstWeekdayOf(year)
+function imprimirCalendario(ano) {
+	var primeiroDiaDeSemana = primeiroDiaDeSemanaDe(ano)
 
-	print(`            ${year}\n`)
+	imprimir(`            ${ano}\n`)
 
-	var lastDay = printMonth('January', firstWeekday, 31)
-	printMonth('February', lastDay, 28 + isLeap(year))
+	var ultimoDia = imprimirMes('Janeiro', primeiroDiaDeSemana, 31)
+	imprimirMes('Fevereiro', ultimoDia, 28 + eBissexto(ano))
 }
 
-function firstWeekdayOf(year) {
-	var eastern = easternDate(year)
+function primeiroDiaDeSemanaDe(ano) {
+	var pascoa = dataPascoa(ano)
 
-	var januaryDays = 31
-	var februaryDays = 28 + isLeap(year)
-	var marchDays = 31
+	var diasJaneiro = 31
+	var diasFevereiro = 28 + eBissexto(ano)
+	var diasMarco = 31
 
-	var daysUntilEastern = eastern.day
-		+ januaryDays + februaryDays
+	var diasAteAPascoa = pascoa.dia
+		+ diasJaneiro + diasFevereiro
 
-	if (eastern.month == 4)
-		daysUntilEastern += marchDays
+	if (pascoa.mes == 4)
+		diasAteAPascoa += diasMarco
 
-	var firstSunday = daysUntilEastern % 7
+	var primeiroDomingoAno = diasAteAPascoa % 7
 
-	switch (firstSunday) {
-		case 1: return SUNDAY
-		case 2: return SATURDAY
-		case 3: return FRIDAY
-		case 4: return THURSDAY
-		case 5: return WEDNESDAY
-		case 6: return TUESDAY
-		default: return MONDAY
+	switch (primeiroDomingoAno) {
+		case 1: return DOMINGO
+		case 2: return SABADO
+		case 3: return SEXTA
+		case 4: return QUINTA
+		case 5: return QUARTA
+		case 6: return TERCA
+		default: return SEGUNDA
 	}
 }
 
-function easternDate(year) {
-	var date = {}
-	date.year = year
+function dataPascoa(ano) {
+	var data = {ano}
 
-	var days = easternDayCountingFromFirstDayOfMarch(year)
+	var dias = diaDaPascoaAPartirDeMarco(ano)
 
-	if (days > 31) {
-		date.day = days - 31
-		date.month = 4
+	if (dias > 31) {
+		data.dia = dias - 31
+		data.mes = 4
 	} else {
-		date.day = days
-		date.month = 3
+		data.dia = dias
+		data.mes = 3
 	}
 
-	return date
+	return data
 }
 
-function easternDayCountingFromFirstDayOfMarch(year) {
-	var g = year % 19 + 1
-	var c = floor(year / 100) + 1
-	var x = floor(3 * c / 4) - 12
-	var z = floor((8 * c + 5) / 25) - 5
+function diaDaPascoaAPartirDeMarco(ano) {
+	var g = ano % 19 + 1
+	var c = inteiro(ano / 100) + 1
+	var x = inteiro(3 * c / 4) - 12
+	var z = inteiro((8 * c + 5) / 25) - 5
 	var e = (11 * g + 20 + z - x) % 30
-	var d = 5 * floor(year / 4) - (x + 10)
+	var d = 5 * inteiro(ano / 4) - (x + 10)
 
 	if ((e == 25 && g < 11) || e == 24)
 		e++
@@ -69,91 +68,91 @@ function easternDayCountingFromFirstDayOfMarch(year) {
 	return n + 7 - ((d + n) % 7)
 }
 
-function isLeap(year) {
-	if (year % 100 == 0)
-		year = floor(year / 100)
+function eBissexto(ano) {
+	if (ano % 100 == 0)
+		ano = inteiro(ano / 100)
 
-	return year % 4 == 0
+	return ano % 4 == 0
 }
 
-function printMonth(name, firstWeekday, days) {
-	var week = 0
+function imprimirMes(nome, primeiroDiaDeSemana, dias) {
+	var semana = 0
 
-	printSeparator()
+	imprimirSeparador()
 
-	print('|&nbsp;')
+	imprimir('|&nbsp;')
 
-	for (d = 0; d < name.length; d++) {
-		print(name[d])
+	for (d = 0; d < nome.length; d++) {
+		imprimir(nome[d])
 	}
 
-	for (d = name.length; d < 26; d++) {
-		print('&nbsp;')
+	for (d = nome.length; d < 26; d++) {
+		imprimir('&nbsp;')
 	}
 
-	print('&nbsp;|\n|')
+	imprimir('&nbsp;|\n|')
 
-	// print spaces to fill not used days
-	for (d = 0; d < firstWeekday; d++) {
-		week = printDay(week, '-', '-')
+	// imprimir spaces to fill not used dias
+	for (d = 0; d < primeiroDiaDeSemana; d++) {
+		semana = imprimirDia(semana, '-', '-')
 	}
 
-	// print days that need a zero at its side
+	// imprimir dias that need a zero at its side
 	for (d = 1; d < 10; d++) {
-		week = printDay(week, '0', d)
+		semana = imprimirDia(semana, '0', d)
 	}
 
-	// print all the other days
-	for (d = 10; d <= days; d++) {
-		week = printDay(week, d)
+	// imprimir all the other dias
+	for (d = 10; d <= dias; d++) {
+		semana = imprimirDia(semana, d)
 	}
 
-	var lastWeekday = week % 7
+	var ultimoDiaSemana = semana % 7
 
-	var lines = 7 * 6 - (firstWeekday + days)
+	var linhas = 7 * 6 - (primeiroDiaDeSemana + dias)
 
-	for (d = 0; d < lines; d++) {
-		week = printDay(week, '-', '-')
+	for (d = 0; d < linhas; d++) {
+		semana = imprimirDia(semana, '-', '-')
 	}
 
-	print('|\n')
+	imprimir('|\n')
 
-	return lastWeekday
+	return ultimoDiaSemana
 }
 
-function printSeparator() {
-	print('| ')
+function imprimirSeparador() {
+	imprimir('| ')
 	for (d = 0; d < 26; d++) {
-		print('-')
+		imprimir('-')
 	}
-	print(' |\n')
+	imprimir(' |\n')
 }
 
-function printDay(week, day1, day2) {
-	print(`&nbsp;${day1}${day2??''}&nbsp;`)
-	week++
+function imprimirDia(semana, dia) {
+	imprimir(`&nbsp;${dia1}${dia2??''}&nbsp;`)
+	semana++
 
-	if (week % 7 == 0 && week < 7 * 6) {
-		print('|\n|')
+	if (semana % 7 == 0 && semana < 7 * 6) {
+		imprimir('|\n|')
 	}
 
-	return week
+	return semana
 }
 
-function print(text) {
-	var html = $('#body').html()
+function imprimir(text) {
+	var html = $('#calendario').html()
 	text = text.replace('\n', '<br />')
-	$('#body').html(html + text)
+	$('#calendario').html(html + text)
 }
 
-function floor(number) {
+function inteiro(number) {
 	return Math.floor(number)
 }
 
-var SUNDAY = 0
-var MONDAY = 1
-var TUESDAY = 2
-var WEDNESDAY = 3
-var THURSDAY = 4
-var FRIDAY = 5
-var SATURDAY = 6
+var DOMINGO = 0
+var SEGUNDA = 1
+var TERCA = 2
+var QUARTA = 3
+var QUINTA = 4
+var SEXTA = 5
+var SABADO = 6
