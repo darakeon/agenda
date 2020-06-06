@@ -94,16 +94,11 @@ function imprimirMes(nome, primeiroDiaDeSemana, dias) {
 
 	// imprimir spaces to fill not used dias
 	for (d = 0; d < primeiroDiaDeSemana; d++) {
-		semana = imprimirDia(semana, '-', '-')
+		semana = imprimirDia(semana, '--')
 	}
 
 	// imprimir dias that need a zero at its side
-	for (d = 1; d < 10; d++) {
-		semana = imprimirDia(semana, '0', d)
-	}
-
-	// imprimir all the other dias
-	for (d = 10; d <= dias; d++) {
+	for (d = 1; d <= dias; d++) {
 		semana = imprimirDia(semana, d)
 	}
 
@@ -112,7 +107,7 @@ function imprimirMes(nome, primeiroDiaDeSemana, dias) {
 	var linhas = 7 * 6 - (primeiroDiaDeSemana + dias)
 
 	for (d = 0; d < linhas; d++) {
-		semana = imprimirDia(semana, '-', '-')
+		semana = imprimirDia(semana, '--')
 	}
 
 	imprimir('|\n')
@@ -129,7 +124,10 @@ function imprimirSeparador() {
 }
 
 function imprimirDia(semana, dia) {
-	imprimir(`&nbsp;${dia1}${dia2??''}&nbsp;`)
+	if (dia < 10)
+		dia = '0' + dia
+	
+	imprimir(`&nbsp;${dia}&nbsp;`)
 	semana++
 
 	if (semana % 7 == 0 && semana < 7 * 6) {
