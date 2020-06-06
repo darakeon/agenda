@@ -52,11 +52,11 @@ function easternDate(year) {
 
 function easternDayCountingFromFirstDayOfMarch(year) {
 	var g = year % 19 + 1
-	var c = year / 100 + 1
-	var x = 3 * c / 4 - 12
-	var z = (8 * c + 5) / 25 - 5
+	var c = floor(year / 100) + 1
+	var x = floor(3 * c / 4) - 12
+	var z = floor((8 * c + 5) / 25) - 5
 	var e = (11 * g + 20 + z - x) % 30
-	var d = 5 * year / 4 - (x + 10)
+	var d = 5 * floor(year / 4) - (x + 10)
 
 	if ((e == 25 && g < 11) || e == 24)
 		e++
@@ -71,7 +71,7 @@ function easternDayCountingFromFirstDayOfMarch(year) {
 
 function isLeap(year) {
 	if (year % 100 == 0)
-		year /= 100
+		year = floor(year / 100)
 
 	return year % 4 == 0
 }
@@ -144,6 +144,10 @@ function print(text) {
 	var html = $('#body').html()
 	text = text.replace('\n', '<br />')
 	$('#body').html(html + text)
+}
+
+function floor(number) {
+	return Math.floor(number)
 }
 
 var SUNDAY = 0
