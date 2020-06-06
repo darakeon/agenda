@@ -1,11 +1,3 @@
-function main() {
-	var year = 2008
-
-	printCalendar(year)
-
-	return 0
-}
-
 function printCalendar(year) {
 	var firstWeekday = firstWeekdayOf(year)
 
